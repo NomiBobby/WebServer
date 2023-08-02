@@ -1,10 +1,10 @@
-from flask import Flask
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return "How much is Messi ticket price?\n"
+    return render_template("index.html")
 
 # app.run(host="0.0.0.0", port=80)
 if __name__ == '__main__':
