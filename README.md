@@ -1,7 +1,6 @@
 # messi-ticket-price-tracker
 web app to track Lionel Messi ticket prices
 
-
 # Commands
 ## Setup gunicorn
     gunicorn -b 0.0.0.0:8000 app:app
