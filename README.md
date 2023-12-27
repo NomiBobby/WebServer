@@ -18,7 +18,7 @@ gunicorn is a wsgi NEED explaination
     sudo lsof -i :8000
 
 ## Setup a service for gunicorn
-    sudo nano /etc/systemd/system/webserver.service
+    Run `sudo nano /etc/systemd/system/webserver.service` to create the service. Paste the following in the edit window.
     ```
     [Unit]
     Description=Gunicorn instance for a simple hello world app
@@ -32,10 +32,13 @@ gunicorn is a wsgi NEED explaination
     [Install]
     WantedBy=multi-user.target
     ```
+    Run the following commands to handle the service.
+    ```
     sudo systemctl daemon-reload
     sudo systemctl start webserver
     sudo systemctl enable webserver
     sudo systemctl stop webserver
+    ```
 
 Try run `curl localhost:8000`, the server will return the file to the terminal.
 
