@@ -18,27 +18,28 @@ gunicorn is a wsgi NEED explaination
     sudo lsof -i :8000
 
 ## Setup a service for gunicorn
-    Run `sudo nano /etc/systemd/system/webserver.service` to create the service. Paste the following in the edit window.
-    ```
-    [Unit]
-    Description=Gunicorn instance for a simple hello world app
-    After=network.target
-    [Service]
-    User=ubuntu
-    Group=www-data
-    WorkingDirectory=/home/ubuntu/repo/WebServer
-    ExecStart=/home/ubuntu/repo/WebServer/venv/bin/gunicorn -b localhost:8000 app:app
-    Restart=always 
-    [Install]
-    WantedBy=multi-user.target
-    ```
-    Run the following commands to handle the service.
-    ```
-    sudo systemctl daemon-reload
-    sudo systemctl start webserver
-    sudo systemctl enable webserver
-    sudo systemctl stop webserver
-    ```
+Run `sudo nano /etc/systemd/system/webserver.service` to create the service. Paste the following in the edit window.
+```
+[Unit]
+Description=Gunicorn instance for a simple hello world app
+After=network.target
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/repo/WebServer
+ExecStart=/home/ubuntu/repo/WebServer/venv/bin/gunicorn -b localhost:8000 app:app
+Restart=always 
+[Install]
+WantedBy=multi-user.target
+```
+
+Run the following commands to handle the service.
+```
+sudo systemctl daemon-reload
+sudo systemctl start webserver
+sudo systemctl enable webserver
+sudo systemctl stop webserver
+```
 
 Try run `curl localhost:8000`, the server will return the file to the terminal.
 
