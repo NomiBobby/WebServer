@@ -1,4 +1,4 @@
-# messi-ticket-price-tracker
+# Webserver
 web app to track Lionel Messi ticket prices
 
 # Server Setup Steps
@@ -59,3 +59,65 @@ server{
 
 Also edit the location to:
 proxy_pass http://flaskwebserver;
+
+## Watch dog
+Automating the process of restarting Gunicorn after each website update can be achieved through various methods.
+One common approach is to use a process manager or a script to monitor changes in your codebase and restart the Gunicorn server when necessary.
+Here's a simple way to achieve this using a tool called watchdog along with a shell script:
+
+### Install watchdog
+`pip install watchdog`
+
+### Create a shell script
+Create a shell script (e.g., restart_gunicorn.sh) with the following content:
+
+```
+#!/bin/bash
+
+# Replace the following with your Gunicorn command
+GUNICORN_CMD="gunicorn -w 4 -b 0.0.0.0:8000 your_app:app"
+
+# Restart Gunicorn
+pkill -f "$GUNICORN_CMD"
+$GUNICORN_CMD
+```
+
+Make sure to replace your_app:app with the actual location of your Flask application.
+
+### Watch for Changes with Watchdog
+Create a Python script (e.g., watch_for_changes.py) to watch for changes in your codebase:
+```
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+import subprocess
+
+class CodeChangeHandler(FileSystemEventHandler):
+    def on_any_event(self, event):
+        if event.is_directory or not event.src_path.endswith('.py'):
+            return
+        print(f'Restarting Gunicorn due to changes in {event.src_path}')
+        subprocess.call(['bash', 'restart_gunicorn.sh'])
+
+def watch_for_changes():
+    event_handler = CodeChangeHandler()
+    observer = Observer()
+    observer.schedule(event_handler, path='.', recursive=True)
+    observer.start()
+
+    try:
+        while True:
+            pass
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()
+
+if __name__ == "__main__":
+    watch_for_changes()
+
+```
+
+### Run the Watcher Script
+`python watch_for_changes.py &`
+This script will keep running and monitor changes in your codebase. When changes are detected, it will execute the restart_gunicorn.sh script, which stops the existing Gunicorn process and starts a new one.
+
+Remember to adjust the paths and configurations according to your specific setup. Additionally, ensure that the scripts have the necessary permissions to execute. This approach provides a basic setup, and you may need to customize it based on your specific deployment environment and requirements.
